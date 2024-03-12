@@ -1,3 +1,15 @@
+.pokemon {
+    display: inline-block;
+    width: 200px;
+    margin: 10px;
+    text-align: center;
+}
+
+.pokemon img {
+    width: 100px;
+    height: 100px;
+}
+
 .pokemon-card {
     background-color: #f8f9fa;
     border: 1px solid #dee2e6;
