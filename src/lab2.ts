@@ -71,14 +71,24 @@ function displayPokemons(pokemons: Pokemon[]): void {
   if (container) {
     container.innerHTML = "";
     pokemons.forEach((pokemon) => {
-        const pokemonElement = document.createElement("div");
-        pokemonElement.classList.add("pokemon");
-        pokemonElement.innerHTML = `
-            <img src="${pokemon.image}" alt="${pokemon.name}">
-            <h3>${pokemon.name}</h3>
-            <p>Type: ${pokemon.type}</p>
+      const pokemonElement = document.createElement("div");
+      pokemonElement.classList.add("pokemon");
+      pokemonElement.innerHTML = `
+            <div class="container" id="pokemon-container">
+                <div class="row justify-content-center">
+                  <div class="col-md-8">
+                    <div class="row">
+                    <div class="col-lg-2 col-md-3 col-sm-4 mb-4">
+                      <div class="pokemon-card" onclick="handleCardClick(this)">
+                          <img src="${pokemon.image}" alt="${pokemon.name}">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             `;
       container.appendChild(pokemonElement);
+      console.log(pokemonElement);
     });
   }
 }

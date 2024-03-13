@@ -105,8 +105,9 @@ function displayPokemons(pokemons) {
         pokemons.forEach(function (pokemon) {
             var pokemonElement = document.createElement("div");
             pokemonElement.classList.add("pokemon");
-            pokemonElement.innerHTML = "\n            <img src=\"".concat(pokemon.image, "\" alt=\"").concat(pokemon.name, "\">\n            <h3>").concat(pokemon.name, "</h3>\n            <p>Type: ").concat(pokemon.type, "</p>\n            ");
+            pokemonElement.innerHTML = "\n            <div class=\"container\" id=\"pokemon-container\">\n                <div class=\"row justify-content-center\">\n                  <div class=\"col-md-8\">\n                    <div class=\"row\">\n                    <div class=\"col-lg-2 col-md-3 col-sm-4 mb-4\">\n                      <div class=\"pokemon-card\" onclick=\"handleCardClick(this)\">\n                          <img src=\"".concat(pokemon.image, "\" alt=\"").concat(pokemon.name, "\">\n                      </div>\n                    </div>\n                  </div>\n                </div>\n              </div>\n            ");
             container.appendChild(pokemonElement);
+            console.log(pokemonElement);
         });
     }
 }
