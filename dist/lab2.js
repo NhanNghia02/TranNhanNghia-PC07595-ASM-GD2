@@ -58,7 +58,7 @@ var person = {
 };
 console.log(person);
 function fetchPokemons() {
-    return __awaiter(this, void 0, void 0, function () {
+    return __awaiter(this, void 0, Promise, function () {
         var response, data, pokemons;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -80,7 +80,7 @@ function fetchPokemons() {
     });
 }
 function shufflePokemons() {
-    return __awaiter(this, void 0, void 0, function () {
+    return __awaiter(this, void 0, Promise, function () {
         var pokemons, shuffledPokemons;
         return __generator(this, function (_a) {
             switch (_a.label) {
