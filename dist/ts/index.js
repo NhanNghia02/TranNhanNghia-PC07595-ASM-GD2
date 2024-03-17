@@ -97,7 +97,7 @@ function shufflePokemons() {
 function shuffle(array) {
     return array.sort(function () { return Math.random() - 0.5; });
 }
-//Get dữ liệu
+// Get dữ liệu
 function displayPokemons(pokemons) {
     var container = document.getElementById("pokemon-container");
     if (container) {
@@ -105,12 +105,87 @@ function displayPokemons(pokemons) {
         pokemons.forEach(function (pokemon) {
             var pokemonElement = document.createElement("div");
             pokemonElement.classList.add("pokemon");
-            pokemonElement.innerHTML = "\n            <div class=\"container\" id=\"pokemon-container\">\n                <div class=\"row justify-content-center\">\n                  <div class=\"col-md-8\">\n                    <div class=\"row\">\n                    <div class=\"col-lg-2 col-md-3 col-sm-4 mb-4\">\n                      <div class=\"pokemon-card\" onclick=\"handleCardClick(this)\">\n                          <img src=\"".concat(pokemon.image, "\" alt=\"").concat(pokemon.name, "\">\n                      </div>\n                    </div>\n                  </div>\n                </div>\n              </div>\n            ");
+            pokemonElement.innerHTML = "\n          <div class=\"pokemon-card\" data-id=\"".concat(pokemon.id, "\">\n            <img src=\"").concat(pokemon.image, "\" alt=\"").concat(pokemon.name, "\">\n          </div>\n        ");
             container.appendChild(pokemonElement);
             console.log(pokemonElement);
+            pokemonElement.addEventListener("click", function () { return handlePokemonClick(pokemonElement, pokemon.id); });
         });
+    }
+}
+// Xữ lý matched và unmatched
+var selectedPokemonElement = null;
+var selectedPokemonId = null;
+function handlePokemonClick(element, id) {
+    if (selectedPokemonId === null) {
+        selectedPokemonId = id;
+        selectedPokemonElement = element;
+        selectedPokemonElement.classList.add("selected");
+    }
+    else {
+        if (selectedPokemonId === id) {
+            console.log("Chọn đúng hình!");
+            selectedPokemonElement === null || selectedPokemonElement === void 0 ? void 0 : selectedPokemonElement.classList.add("matched");
+            selectedPokemonId = null;
+            selectedPokemonElement = null;
+        }
+        else {
+            console.log("Chọn sai hình!");
+            element.classList.add("wrong");
+            setTimeout(function () {
+                element.classList.remove("wrong");
+                selectedPokemonElement === null || selectedPokemonElement === void 0 ? void 0 : selectedPokemonElement.classList.remove("selected");
+                selectedPokemonId = null;
+                selectedPokemonElement = null;
+            }, 1000);
+        }
     }
 }
 window.addEventListener("DOMContentLoaded", function () {
     shufflePokemons();
+});
+// Nhận dữ liệu người dùng, bắt lỗi, hủy, load
+document.addEventListener("DOMContentLoaded", function () {
+    var form = document.getElementById("myForm");
+    var cancelButton = document.getElementById('cancelButton');
+    var reloadLink = document.getElementById('reloadLink');
+    form.addEventListener("submit", handleSubmit);
+    cancelButton.addEventListener("click", handleCancel);
+    reloadLink.addEventListener('click', handleReload);
+    function handleSubmit(event) {
+        event.preventDefault();
+        var usernameInput = document.getElementById("username");
+        var username = usernameInput.value.trim();
+        if (username.length === 0) {
+            displayErrorMessage("Tên người dùng không được để trống.");
+            return;
+        }
+        else if (/[^a-zA-Z0-9]/.test(username)) {
+            displayErrorMessage("Tên người dùng không được chứa ký tự đặc biệt.");
+            return;
+        }
+        else if (username.length === 1) {
+            displayErrorMessage("Tên người dùng không được chỉ chứa một ký tự.");
+            return;
+        }
+        displayErrorMessage(username);
+        displayUsername(username);
+    }
+    function displayUsername(username) {
+        var usernameDisplay = document.getElementById("usernameDisplay");
+        if (usernameDisplay) {
+            usernameDisplay.innerText = "Xin ch\u00E0o, ".concat(username, " welcome to the Pikachu game !!!");
+        }
+    }
+    function displayErrorMessage(message) {
+        var errorMessage = document.getElementById("errorMessage");
+        if (errorMessage) {
+            errorMessage.innerText = message;
+        }
+    }
+    function handleCancel() {
+        window.location.href = "index.html";
+    }
+    function handleReload() {
+        window.location.reload();
+    }
 });

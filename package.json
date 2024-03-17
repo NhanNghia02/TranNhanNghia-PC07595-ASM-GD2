@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "express": "^4.18.3",
+    "inquirer": "^9.2.16",
     "json": "^11.0.0"
   },
   "description": ""

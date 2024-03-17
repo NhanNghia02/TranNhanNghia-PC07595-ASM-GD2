@@ -1,8 +1,15 @@
+.edit h2 {
+    text-align: center;
+    color: white;
+    margin-bottom: 30px;
+}
+
 .pokemon {
     display: inline-block;
     width: 200px;
     margin: 10px;
     text-align: center;
+    border: 1px solid rgb(75, 75, 75);
 }
 
 .pokemon img {
@@ -45,3 +52,29 @@
         max-width: 100%;
     }
 }
+
+.pokemon-card:hover {
+  background-color: #999;
+}
+
+.pokemon-card.selected {
+  background-color: blue;
+}
+
+.pokemon-card.matched {
+  opacity: 0.5;
+}
+
+.pokemon-card.wrong {
+  background-color: red;
+  animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+  
