@@ -40,28 +40,35 @@ interface Pokemon {
 }
 
 async function fetchPokemons(): Promise<Pokemon[]> {
-  const response = await fetch("https://pokeapi.co/api/v2/pokemon");
+  const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=10");
   const data = await response.json();
-  const pokemons: Pokemon[] = data.results.map(
-    (result: any, index: number) => ({
-      id: index + 1,
-      name: result.name,
-      image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
-        index + 1
-      }.png`,
-      type: "unknown",
-    })
-  );
+
+  // Lấy ra danh sách các Pokemon từ dữ liệu nhận được
+  const pokemonList = data.results.map((result: any, index: number) => ({
+    id: index + 1,
+    name: result.name,
+    image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
+      index + 1
+    }.png`,
+    type: "unknown",
+  }));
+
+  // Tạo mảng mới chứa mỗi Pokemon hai lần
+  const pokemons: Pokemon[] = [];
+  for (const pokemon of pokemonList) {
+    pokemons.push(pokemon, { ...pokemon });
+  }
   return pokemons;
 }
 
 async function shufflePokemons(): Promise<void> {
   const pokemons = await fetchPokemons();
   const shuffledPokemons = shuffle(pokemons);
-  displayPokemons(shuffledPokemons);
+  const randomPokemons = shuffledPokemons.slice(0, 20); // Hiển thị 20 con pokemon
+  displayPokemons(randomPokemons);
 }
 
-function shuffle(array: any[]): any[] {
+function shuffle<T>(array: T[]): T[] {
   return array.sort(() => Math.random() - 0.5);
 }
 
@@ -80,7 +87,9 @@ function displayPokemons(pokemons: Pokemon[]): void {
         `;
       container.appendChild(pokemonElement);
       console.log(pokemonElement);
-      pokemonElement.addEventListener("click", () => handlePokemonClick(pokemonElement, pokemon.id));
+      pokemonElement.addEventListener("click", () =>
+        handlePokemonClick(pokemonElement, pokemon.id)
+      );
     });
   }
 }
@@ -94,28 +103,27 @@ function handlePokemonClick(element: HTMLDivElement, id: number): void {
     selectedPokemonId = id;
     selectedPokemonElement = element;
     selectedPokemonElement.classList.add("selected");
-
   } else {
-    
-    if (selectedPokemonId === id) {
+    if (selectedPokemonId === id && selectedPokemonElement !== element) {
       console.log("Chọn đúng hình!");
-
+      element.classList.add("selected");
+      element.classList.add("matched"); // Tương tác matched
       selectedPokemonElement?.classList.add("matched");
       selectedPokemonId = null;
       selectedPokemonElement = null;
-    } else {
-      console.log("Chọn sai hình!");
 
-      element.classList.add("wrong");
-      setTimeout(() => {
-        element.classList.remove("wrong");
-        selectedPokemonElement?.classList.remove("selected");
-        selectedPokemonId = null;
-        selectedPokemonElement = null;
-      }, 1000);
+      } else {
+        console.log("Chọn sai hình!");
+        element.classList.add("wrong");
+        setTimeout(() => {
+          element.classList.remove("wrong");
+          selectedPokemonElement?.classList.remove("selected");
+          selectedPokemonId = null;
+          selectedPokemonElement = null;
+        }, 1000);
+      }
     }
   }
-}
 
 window.addEventListener("DOMContentLoaded", () => {
   shufflePokemons();
@@ -124,12 +132,14 @@ window.addEventListener("DOMContentLoaded", () => {
 // Nhận dữ liệu người dùng, bắt lỗi, hủy, load
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("myForm") as HTMLFormElement;
-  const cancelButton = document.getElementById('cancelButton') as HTMLFormElement;
-  const reloadLink = document.getElementById('reloadLink') as HTMLFormElement;
+  const cancelButton = document.getElementById(
+    "cancelButton"
+  ) as HTMLFormElement;
+  const reloadLink = document.getElementById("reloadLink") as HTMLFormElement;
 
   form.addEventListener("submit", handleSubmit);
   cancelButton.addEventListener("click", handleCancel);
-  reloadLink.addEventListener('click', handleReload);
+  reloadLink.addEventListener("click", handleReload);
 
   function handleSubmit(event: Event) {
     event.preventDefault();
@@ -141,14 +151,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (username.length === 0) {
       displayErrorMessage("Tên người dùng không được để trống.");
       return;
-    }
-
-    else if (/[^a-zA-Z0-9]/.test(username)) {
+    } else if (/[^a-zA-Z0-9]/.test(username)) {
       displayErrorMessage("Tên người dùng không được chứa ký tự đặc biệt.");
       return;
-    }
-
-    else if (username.length === 1) {
+    } else if (username.length === 1) {
       displayErrorMessage("Tên người dùng không được chỉ chứa một ký tự.");
       return;
     }
@@ -157,6 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
     displayUsername(username);
   }
 
+  //Xữ lý hiển thị
   function displayUsername(username: string) {
     const usernameDisplay = document.getElementById("usernameDisplay");
     if (usernameDisplay) {
@@ -166,15 +173,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function displayErrorMessage(message: string) {
     var errorMessage = document.getElementById("errorMessage");
-    if (errorMessage){
+    if (errorMessage) {
       errorMessage.innerText = message;
     }
   }
 
+  // Thoát ra index
   function handleCancel() {
     window.location.href = "index.html";
   }
 
+  // Loading lại dữ liệu
   function handleReload() {
     window.location.reload();
   }

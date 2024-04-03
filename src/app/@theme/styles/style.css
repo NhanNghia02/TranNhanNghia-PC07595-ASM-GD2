@@ -5,6 +5,7 @@
 }
 
 .pokemon {
+    background-color: #6a43a0;
     display: inline-block;
     width: 200px;
     margin: 10px;
@@ -15,10 +16,11 @@
 .pokemon img {
     width: 100px;
     height: 100px;
+    border-radius: 10px;
 }
 
 .pokemon-card {
-    background-color: #f8f9fa;
+    border-radius: 10px;
     border: 1px solid #dee2e6;
     padding: 20px 2px;
     border-radius: 5px;
@@ -34,9 +36,31 @@
 .pokemon-card img {
     width: 40%;
 }
-
+ 
 #errorField {
     color: red;
+}
+
+.selected {
+  background-color: rgb(160, 160, 188);
+}
+
+.matched {
+  transition: background-color 1s ease;
+  background-color: rgb(30, 187, 30);
+}
+
+.pokemon img {
+  visibility: visible;
+}
+
+.pokemon.matched img {
+  visibility: hidden;
+}
+
+.wrong {
+  background-color: red;
+  animation: shake 0.5s ease;
 }
 
 @media (max-width: 768px) {
@@ -51,23 +75,6 @@
         flex: 0 0 100%;
         max-width: 100%;
     }
-}
-
-.pokemon-card:hover {
-  background-color: #999;
-}
-
-.pokemon-card.selected {
-  background-color: blue;
-}
-
-.pokemon-card.matched {
-  opacity: 0.5;
-}
-
-.pokemon-card.wrong {
-  background-color: red;
-  animation: shake 0.5s ease;
 }
 
 @keyframes shake {

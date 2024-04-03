@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -58,37 +69,43 @@ var person = {
 };
 console.log(person);
 function fetchPokemons() {
-    return __awaiter(this, void 0, Promise, function () {
-        var response, data, pokemons;
+    return __awaiter(this, void 0, void 0, function () {
+        var response, data, pokemonList, pokemons, _i, pokemonList_1, pokemon;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, fetch("https://pokeapi.co/api/v2/pokemon")];
+                case 0: return [4 /*yield*/, fetch("https://pokeapi.co/api/v2/pokemon?limit=10")];
                 case 1:
                     response = _a.sent();
                     return [4 /*yield*/, response.json()];
                 case 2:
                     data = _a.sent();
-                    pokemons = data.results.map(function (result, index) { return ({
+                    pokemonList = data.results.map(function (result, index) { return ({
                         id: index + 1,
                         name: result.name,
                         image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/".concat(index + 1, ".png"),
                         type: "unknown",
                     }); });
+                    pokemons = [];
+                    for (_i = 0, pokemonList_1 = pokemonList; _i < pokemonList_1.length; _i++) {
+                        pokemon = pokemonList_1[_i];
+                        pokemons.push(pokemon, __assign({}, pokemon));
+                    }
                     return [2 /*return*/, pokemons];
             }
         });
     });
 }
 function shufflePokemons() {
-    return __awaiter(this, void 0, Promise, function () {
-        var pokemons, shuffledPokemons;
+    return __awaiter(this, void 0, void 0, function () {
+        var pokemons, shuffledPokemons, randomPokemons;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, fetchPokemons()];
                 case 1:
                     pokemons = _a.sent();
                     shuffledPokemons = shuffle(pokemons);
-                    displayPokemons(shuffledPokemons);
+                    randomPokemons = shuffledPokemons.slice(0, 20);
+                    displayPokemons(randomPokemons);
                     return [2 /*return*/];
             }
         });
@@ -108,7 +125,9 @@ function displayPokemons(pokemons) {
             pokemonElement.innerHTML = "\n          <div class=\"pokemon-card\" data-id=\"".concat(pokemon.id, "\">\n            <img src=\"").concat(pokemon.image, "\" alt=\"").concat(pokemon.name, "\">\n          </div>\n        ");
             container.appendChild(pokemonElement);
             console.log(pokemonElement);
-            pokemonElement.addEventListener("click", function () { return handlePokemonClick(pokemonElement, pokemon.id); });
+            pokemonElement.addEventListener("click", function () {
+                return handlePokemonClick(pokemonElement, pokemon.id);
+            });
         });
     }
 }
@@ -122,8 +141,10 @@ function handlePokemonClick(element, id) {
         selectedPokemonElement.classList.add("selected");
     }
     else {
-        if (selectedPokemonId === id) {
+        if (selectedPokemonId === id && selectedPokemonElement !== element) {
             console.log("Chọn đúng hình!");
+            element.classList.add("selected");
+            element.classList.add("matched"); // Tương tác matched
             selectedPokemonElement === null || selectedPokemonElement === void 0 ? void 0 : selectedPokemonElement.classList.add("matched");
             selectedPokemonId = null;
             selectedPokemonElement = null;
@@ -146,11 +167,11 @@ window.addEventListener("DOMContentLoaded", function () {
 // Nhận dữ liệu người dùng, bắt lỗi, hủy, load
 document.addEventListener("DOMContentLoaded", function () {
     var form = document.getElementById("myForm");
-    var cancelButton = document.getElementById('cancelButton');
-    var reloadLink = document.getElementById('reloadLink');
+    var cancelButton = document.getElementById("cancelButton");
+    var reloadLink = document.getElementById("reloadLink");
     form.addEventListener("submit", handleSubmit);
     cancelButton.addEventListener("click", handleCancel);
-    reloadLink.addEventListener('click', handleReload);
+    reloadLink.addEventListener("click", handleReload);
     function handleSubmit(event) {
         event.preventDefault();
         var usernameInput = document.getElementById("username");
@@ -170,6 +191,7 @@ document.addEventListener("DOMContentLoaded", function () {
         displayErrorMessage(username);
         displayUsername(username);
     }
+    //Xữ lý hiển thị
     function displayUsername(username) {
         var usernameDisplay = document.getElementById("usernameDisplay");
         if (usernameDisplay) {
@@ -182,9 +204,11 @@ document.addEventListener("DOMContentLoaded", function () {
             errorMessage.innerText = message;
         }
     }
+    // Thoát ra index
     function handleCancel() {
         window.location.href = "index.html";
     }
+    // Loading lại dữ liệu
     function handleReload() {
         window.location.reload();
     }
